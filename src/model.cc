@@ -28,6 +28,7 @@ using std::numeric_limits;
 using std::sort;
 using std::string;
 using std::vector;
+using util::peturbChar;
 using util::randomChance;
 using util::randomChar;
 using util::randomTo;
@@ -43,7 +44,7 @@ size_t Guess::getFitness() const noexcept { return fitness; }
 
 void Guess::mutate(double rate) noexcept {
   for (auto& gene : chromosome) {
-    if (randomChance(rate)) gene = randomChar();
+    if (randomChance(rate)) gene = peturbChar(gene);
   }
 }
 

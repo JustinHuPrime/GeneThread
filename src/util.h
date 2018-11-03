@@ -26,6 +26,7 @@
 namespace genethread::util {
 uint8_t randomDigit() noexcept;
 char randomChar() noexcept;
+char peturbChar(char) noexcept;
 bool randomChance(double) noexcept;
 size_t randomTo(size_t max) noexcept;
 model::Guess rouletteSelect(const std::vector<model::Guess>&) noexcept;

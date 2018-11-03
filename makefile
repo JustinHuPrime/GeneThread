@@ -43,7 +43,7 @@ WARNINGS := -Wall -Wextra -Wpedantic -Wpedantic-errors -Wmissing-include-dirs\
 
 #build-specific compiler options
 DEBUGOPTIONS := -Og -ggdb -Wno-unused
-RELEASEOPTIONS := -Os -D NDEBUG -Wunused
+RELEASEOPTIONS := -O3 -D NDEBUG -Wunused
 
 #libraries and included files
 LIBS := -pthread

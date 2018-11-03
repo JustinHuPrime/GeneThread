@@ -38,6 +38,31 @@ char randomChar() noexcept {
 
   return c;
 }
+char peturbChar(char c) noexcept {
+  if (randomChance(0.5)) {
+    switch (c) {
+      case '9':
+        return 'A';
+      case 'Z':
+        return 'a';
+      case 'z':
+        return '0';
+      default:
+        return c + 1;
+    }
+  } else {
+    switch (c) {
+      case '0':
+        return 'z';
+      case 'A':
+        return '9';
+      case 'a':
+        return 'Z';
+      default:
+        return c - 1;
+    }
+  }
+}
 bool randomChance(double chance) noexcept {
   random_device rd;
   return rd() < rd.max() * chance;
