@@ -1,0 +1,4 @@
+geneThread
+bin/
+dependencies/
+*.log
