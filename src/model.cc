@@ -24,7 +24,6 @@
 
 namespace genethread::model {
 namespace {
-using std::numeric_limits;
 using std::sort;
 using std::string;
 using std::vector;
@@ -52,7 +51,7 @@ void Guess::computeFitness(const string& target) noexcept {
   assert(chromosome.size() == target.size());
 
   // difference between digits cannot possibly be more than char max.
-  fitness = target.size() * numeric_limits<char>().max();
+  fitness = target.size() * MAX_DIFF;
   for (size_t i = 0; i < target.size(); i++)
     fitness -= abs(target[i] - chromosome[i]);
 }

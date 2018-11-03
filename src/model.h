@@ -22,6 +22,8 @@
 #include <vector>
 
 namespace genethread::model {
+constexpr auto MAX_DIFF = 'z' - '0';
+
 class Guess {
  public:
   explicit Guess(size_t) noexcept;

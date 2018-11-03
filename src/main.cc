@@ -32,6 +32,7 @@ using genethread::Config;
 using genethread::validateConfig;
 using genethread::model::crossover;
 using genethread::model::Guess;
+using genethread::model::MAX_DIFF;
 using genethread::util::rouletteSelect;
 using std::cerr;
 using std::cout;
@@ -39,7 +40,6 @@ using std::function;
 using std::list;
 using std::map;
 using std::min;
-using std::numeric_limits;
 using std::ref;
 using std::string;
 using std::swap;
@@ -128,21 +128,24 @@ int main(int argc, char* argv[]) {
       if (currIter->getFitness() > bestGuessIter->getFitness())
         bestGuessIter = currIter;
     }
-    if (bestGuessIter->getFitness() ==
-        target.size() * numeric_limits<char>().max()) {
+    if (bestGuessIter->getFitness() == target.size() * MAX_DIFF) {
       cout << "Found number!\nGuess #"
            << bestGuessIter - currentPopulation.cbegin() << '\n';
+      cout.flush();
       exit(EXIT_SUCCESS);
     }
-    if (config.getInt(Config::VERBOSE) > 0)
+    if (config.getInt(Config::VERBOSE) > 0) {
       cout << "Generation " << generation << '\n';
-    if (config.getInt(Config::VERBOSE) > 1)
+      cout.flush();
+    }
+    if (config.getInt(Config::VERBOSE) > 1) {
       cout << "Current closest match: " << bestGuessIter->operator string()
            << " (fitness: "
            << (bestGuessIter->getFitness() /
-               static_cast<double>(target.size() *
-                                   numeric_limits<char>().max()))
+               static_cast<double>(target.size() * MAX_DIFF))
            << ")\n\n";
+      cout.flush();
+    }
 
     // end of generation
     generation++;

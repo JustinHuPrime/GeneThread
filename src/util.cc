@@ -23,7 +23,6 @@
 namespace genethread::util {
 namespace {
 using model::Guess;
-using std::numeric_limits;
 using std::random_device;
 using std::vector;
 }  // namespace
@@ -33,7 +32,7 @@ char randomChar() noexcept {
   char c;
   random_device rd;
   do {
-    c = rd() % numeric_limits<char>().max();
+    c = rd() % ('z' - '0' + 1) + '0';
   } while (!isalnum(c));
 
   return c;
