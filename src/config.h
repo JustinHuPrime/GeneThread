@@ -29,6 +29,7 @@ class Config {
   static constexpr auto NUMBER_PARENTS = "number-parents";
   static constexpr auto CROSSOVER_POINTS = "crossover-points";
   static constexpr auto VERBOSE = "display-mode";
+  static constexpr auto CROSSOVER_RATE = "crossover-rate";
 
   Config(const std::string&) noexcept;
   Config(const Config&) = delete;

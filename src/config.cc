@@ -116,5 +116,12 @@ void validateConfig(const Config& c) {
          << "'.\n";
     exit(EXIT_FAILURE);
   }
+  try {
+    c.getDouble(Config::CROSSOVER_RATE);
+  } catch (const std::invalid_argument&) {
+    cerr << "Fatal error: config does not have real '" << Config::CROSSOVER_RATE
+         << "'.\n";
+    exit(EXIT_FAILURE);
+  }
 }
 }  // namespace genethread
