@@ -36,7 +36,7 @@ class Guess {
   void mutate(double) noexcept;
   void computeFitness(const std::string&) noexcept;
 
-  friend Guess crossover(const std::vector<Guess>&, size_t) noexcept;
+  friend Guess crossover(const std::vector<Guess>&, size_t, double) noexcept;
 
  private:
   Guess() noexcept;
@@ -45,7 +45,7 @@ class Guess {
   size_t fitness;
 };
 
-Guess crossover(const std::vector<Guess>&, size_t) noexcept;
+Guess crossover(const std::vector<Guess>&, size_t, double) noexcept;
 }  // namespace genethread::model
 
 #endif  // GENETHREAD_MODEL_H_

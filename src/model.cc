@@ -31,6 +31,7 @@ using std::vector;
 using util::randomChance;
 using util::randomChar;
 using util::randomTo;
+using util::rouletteSelect;
 }  // namespace
 Guess::Guess(size_t length) noexcept : Guess() {
   for (size_t i = 0; i < length; i++) chromosome.push_back(randomChar());
@@ -57,7 +58,8 @@ void Guess::computeFitness(const string& target) noexcept {
 
 // Perfoms multi-parent, n-point crossover with randomly selected crossover
 // points. Selection of parent follows round-robin order.
-Guess crossover(const vector<Guess>& parents, size_t crossoverCount) noexcept {
+Guess crossover(const vector<Guess>& parents, size_t crossoverCount,
+                double rate) noexcept {
   Guess g;
   vector<size_t> crossoverPoints;
 
@@ -68,6 +70,8 @@ Guess crossover(const vector<Guess>& parents, size_t crossoverCount) noexcept {
   for (const auto& parent : parents)
     assert(parent.chromosome.size() == chromosomeLength);
 #endif
+
+  if (!randomChance(rate)) return rouletteSelect(parents);
 
   for (size_t i = 0; i < crossoverCount; i++)
     crossoverPoints.push_back(randomTo(chromosomeLength));

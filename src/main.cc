@@ -104,7 +104,8 @@ int main(int argc, char* argv[]) {
       for (size_t i = 0; i < config.getInt(Config::NUMBER_PARENTS); i++)
         parents.push_back(rouletteSelect(currentPopulation));
       nextPopulation.push_back(
-          crossover(parents, config.getInt(Config::CROSSOVER_POINTS)));
+          crossover(parents, config.getInt(Config::CROSSOVER_POINTS),
+                    config.getDouble(Config::CROSSOVER_RATE)));
     }
     //  - perform mutation
 
