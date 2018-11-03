@@ -23,7 +23,7 @@
 namespace genethread {
 class Config {
  public:
-  static constexpr auto MAX_ITERATIONS = "max-iterations";
+  static constexpr auto MAX_ITERATIONS = "max-generations";
   static constexpr auto POPULATION_SIZE = "population-size";
   static constexpr auto MUTATION_RATE = "mutation-rate";
   static constexpr auto NUMBER_PARENTS = "number-parents";
