@@ -46,7 +46,7 @@ DEBUGOPTIONS := -Og -ggdb -Wno-unused
 RELEASEOPTIONS := -Os -D NDEBUG -Wunused
 
 #libraries and included files
-LIBS :=
+LIBS := -pthread
 INCLUDES := -I$(SRCDIR)
 
 #final executable name
