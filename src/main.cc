@@ -21,6 +21,7 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <list>
 #include <map>
 #include <thread>
 #include <variant>
@@ -35,7 +36,9 @@ using genethread::util::rouletteSelect;
 using std::cerr;
 using std::cout;
 using std::function;
+using std::list;
 using std::map;
+using std::min;
 using std::ref;
 using std::string;
 using std::swap;
@@ -85,16 +88,25 @@ int main(int argc, char* argv[]) {
 
   // run genetic algorithm for configured number of generations.
   size_t generation = 0;
+  size_t maxThreads = min(1U, thread::hardware_concurrency() - 1);
   while (generation < config.getInt(Config::MAX_ITERATIONS)) {
     // compute fitness scores
-    vector<thread> fitnessThreads;
-    for (auto& guess : currentPopulation)  // parallel fitness computation
+    list<thread> fitnessThreads;
+    for (auto& guess :
+         currentPopulation) {  // parallel fitness computation using max
+                               // hardware threads minus one (or one)
+      if (fitnessThreads.size() >= maxThreads) {
+        fitnessThreads.front().join();
+        fitnessThreads.pop_front();
+      }
       fitnessThreads.push_back(
           thread(&Guess::computeFitness, &guess, ref(number)));
+    }
     for (auto& t : fitnessThreads) t.join();  // get all to finish
 
     // create next generation
     //  - perform crossover
+    // not parallel due to container access w/ resize
     while (nextPopulation.size() < currentPopulation.size()) {
       vector<Guess> parents;
       for (size_t i = 0; i < config.getInt(Config::NUMBER_PARENTS); i++)
@@ -103,10 +115,17 @@ int main(int argc, char* argv[]) {
           crossover(parents, config.getInt(Config::CROSSOVER_POINTS)));
     }
     //  - perform mutation
-    vector<thread> mutationThreads;
-    for (auto& guess : nextPopulation)  // parallel mutate
+
+    list<thread> mutationThreads;
+    for (auto& guess :
+         currentPopulation) {  // parallel mutate, capped number of threads
+      if (mutationThreads.size() >= maxThreads) {
+        mutationThreads.front().join();
+        mutationThreads.pop_front();
+      }
       mutationThreads.push_back(thread(
           &Guess::mutate, &guess, config.getDouble(Config::MUTATION_RATE)));
+    }
     for (auto& t : mutationThreads) t.join();  // get all to finish
 
     // check for success
