@@ -24,36 +24,33 @@
 
 namespace genethread::model {
 namespace {
+using std::numeric_limits;
 using std::sort;
 using std::string;
 using std::vector;
 using util::randomChance;
-using util::randomDigit;
+using util::randomChar;
 using util::randomTo;
 }  // namespace
 Guess::Guess(size_t length) noexcept : Guess() {
-  for (size_t i = 0; i < length; i++) chromosome.push_back(randomDigit());
+  for (size_t i = 0; i < length; i++) chromosome.push_back(randomChar());
 }
 
-Guess::operator string() const noexcept {
-  string buffer;
-  for (const auto& digit : chromosome) buffer += static_cast<char>(digit + '0');
-  return buffer;
-}
+Guess::operator string() const noexcept { return chromosome; }
 
 size_t Guess::getFitness() const noexcept { return fitness; }
 
 void Guess::mutate(double rate) noexcept {
   for (auto& gene : chromosome) {
-    if (randomChance(rate)) gene = randomDigit();
+    if (randomChance(rate)) gene = randomChar();
   }
 }
 
-void Guess::computeFitness(const std::vector<uint8_t>& target) noexcept {
+void Guess::computeFitness(const string& target) noexcept {
   assert(chromosome.size() == target.size());
 
-  // difference between digits cannot possibly be more than 9.
-  fitness = target.size() * 10;
+  // difference between digits cannot possibly be more than char max.
+  fitness = target.size() * numeric_limits<char>().max();
   for (size_t i = 0; i < target.size(); i++)
     fitness -= abs(target[i] - chromosome[i]);
 }

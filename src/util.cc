@@ -23,11 +23,21 @@
 namespace genethread::util {
 namespace {
 using model::Guess;
+using std::numeric_limits;
 using std::random_device;
 using std::vector;
 }  // namespace
 
 uint8_t randomDigit() noexcept { return random_device()() % 10; }
+char randomChar() noexcept {
+  char c;
+  random_device rd;
+  do {
+    c = rd() % numeric_limits<char>().max();
+  } while (!isalnum(c));
+
+  return c;
+}
 bool randomChance(double chance) noexcept {
   random_device rd;
   return rd() < rd.max() * chance;

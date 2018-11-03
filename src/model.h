@@ -34,14 +34,14 @@ class Guess {
   size_t getFitness() const noexcept;
 
   void mutate(double) noexcept;
-  void computeFitness(const std::vector<uint8_t>&) noexcept;
+  void computeFitness(const std::string&) noexcept;
 
   friend Guess crossover(const std::vector<Guess>&, size_t) noexcept;
 
  private:
   Guess() noexcept;
 
-  std::vector<uint8_t> chromosome;
+  std::string chromosome;
   size_t fitness;
 };
 

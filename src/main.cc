@@ -39,6 +39,7 @@ using std::function;
 using std::list;
 using std::map;
 using std::min;
+using std::numeric_limits;
 using std::ref;
 using std::string;
 using std::swap;
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
   //  - read in config file
 
   if (argc != 2 + 1) {
-    cerr << "Fatal error: expected config file and target number, but found "
+    cerr << "Fatal error: expected config file and target string, but found "
          << (argc - 1) << " argument" << (argc == 1 + 1 ? "" : "s")
          << " instead.\n";
     exit(EXIT_FAILURE);
@@ -62,29 +63,20 @@ int main(int argc, char* argv[]) {
   Config config(argv[1]);
   validateConfig(config);
 
-  string targetString(argv[2]);
-  vector<uint8_t> number;
-
-  number.reserve(targetString.size());
-  for (const auto& c : targetString) {
-    if (!isdigit(c)) {
-      cerr << "Fatal error: expected target number, but got '" << targetString
+  string target(argv[2]);
+  for (const auto& c : target) {
+    if (!isalnum(c)) {
+      cerr << "Fatal error: expected alphanumeric string, but found '" << target
            << "'.\n";
       exit(EXIT_FAILURE);
     }
-
-    number.push_back(static_cast<uint8_t>(c - '0'));
   }
-
-#ifndef NDEBUG  // sanity check
-  for (const auto& digit : number) assert(digit < 10 && digit >= 0);
-#endif
 
   vector<Guess> currentPopulation;
   vector<Guess> nextPopulation;
   // generate initial population. Not parallel due container access w/ resize
   for (size_t i = 0; i < config.getInt(Config::POPULATION_SIZE); i++)
-    currentPopulation.push_back(Guess(targetString.size()));
+    currentPopulation.push_back(Guess(target.size()));
 
   // run genetic algorithm for configured number of generations.
   size_t generation = 0;
@@ -100,7 +92,7 @@ int main(int argc, char* argv[]) {
         fitnessThreads.pop_front();
       }
       fitnessThreads.push_back(
-          thread(&Guess::computeFitness, &guess, ref(number)));
+          thread(&Guess::computeFitness, &guess, ref(target)));
     }
     for (auto& t : fitnessThreads) t.join();  // get all to finish
 
@@ -135,7 +127,8 @@ int main(int argc, char* argv[]) {
       if (currIter->getFitness() > bestGuessIter->getFitness())
         bestGuessIter = currIter;
     }
-    if (bestGuessIter->getFitness() == number.size() * 10) {
+    if (bestGuessIter->getFitness() ==
+        target.size() * numeric_limits<char>().max()) {
       cout << "Found number!\nGuess #"
            << bestGuessIter - currentPopulation.cbegin() << '\n';
       exit(EXIT_SUCCESS);
@@ -146,7 +139,8 @@ int main(int argc, char* argv[]) {
       cout << "Current closest match: " << bestGuessIter->operator string()
            << " (fitness: "
            << (bestGuessIter->getFitness() /
-               static_cast<double>(number.size() * 10))
+               static_cast<double>(target.size() *
+                                   numeric_limits<char>().max()))
            << ")\n\n";
 
     // end of generation
