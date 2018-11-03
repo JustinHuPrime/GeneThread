@@ -79,8 +79,8 @@ int main(int argc, char* argv[]) {
 
   vector<Guess> currentPopulation;
   vector<Guess> nextPopulation;
-  // generate initial population
-  for (int i = 0; i < config.getInt(Config::POPULATION_SIZE); i++)
+  // generate initial population. Not parallel due container access w/ resize
+  for (size_t i = 0; i < config.getInt(Config::POPULATION_SIZE); i++)
     currentPopulation.push_back(Guess(targetString.size()));
 
   // run genetic algorithm for configured number of generations.
