@@ -109,12 +109,7 @@ int main(int argc, char* argv[]) {
           &Guess::mutate, &guess, config.getDouble(Config::MUTATION_RATE)));
     for (auto& t : mutationThreads) t.join();  // get all to finish
 
-    // end of generation
-    generation++;
-    swap(currentPopulation, nextPopulation);
-    nextPopulation.clear();
-
-    // display info
+    // check for success
     auto bestGuessIter = currentPopulation.cbegin();
     for (auto currIter = currentPopulation.cbegin();
          currIter != currentPopulation.cend(); ++currIter) {
@@ -126,12 +121,19 @@ int main(int argc, char* argv[]) {
            << bestGuessIter - currentPopulation.cbegin() << '\n';
       exit(EXIT_SUCCESS);
     }
-
     if (config.getInt(Config::VERBOSE) > 0)
       cout << "Generation " << generation << '\n';
     if (config.getInt(Config::VERBOSE) > 1)
       cout << "Current closest match: " << bestGuessIter->operator string()
-           << "\n\n";
+           << " (fitness: "
+           << (bestGuessIter->getFitness() /
+               static_cast<double>(number.size() * 10))
+           << ")\n\n";
+
+    // end of generation
+    generation++;
+    swap(currentPopulation, nextPopulation);
+    nextPopulation.clear();
   }
 
   cout << "No match found in " << generation << " generations.\n";

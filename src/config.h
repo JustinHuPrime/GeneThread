@@ -28,7 +28,7 @@ class Config {
   static constexpr auto MUTATION_RATE = "mutation-rate";
   static constexpr auto NUMBER_PARENTS = "number-parents";
   static constexpr auto CROSSOVER_POINTS = "crossover-points";
-  static constexpr auto VERBOSE = "verbose";
+  static constexpr auto VERBOSE = "display-mode";
 
   Config(const std::string&) noexcept;
   Config(const Config&) = delete;
